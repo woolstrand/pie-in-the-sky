@@ -7,7 +7,7 @@ let log = Logger(subsystem: "io.github.woolstrand.pieinthesky", category: "app")
 /// Thin helpers over the CoreAudio HAL C API.
 enum CA {
     static let system = AudioObjectID(kAudioObjectSystemObject)
-    static let proxyUID = "PieInTheSky_UID"
+    static let proxyUID = "Pie in the Sky_UID"   // the driver derives it from kDriver_Name
     /// Custom property of the proxy driver: reported output latency in ms (CFNumber).
     static let latencySelector: AudioObjectPropertySelector = 0x62746C74 // 'btlt'
 
