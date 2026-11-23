@@ -35,15 +35,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     // MARK: - Status item
 
     func updateIcon() {
-        let symbol: String
         switch controller.snapshot.state {
-        case .active: symbol = "headphones.circle.fill"
-        case .noDriver, .failed: symbol = "exclamationmark.triangle"
-        default: symbol = "headphones"
+        case .active:
+            statusItem.button?.image = Icon.headphones(filled: true)
+        case .noDriver, .failed:
+            let image = NSImage(systemSymbolName: "exclamationmark.triangle", accessibilityDescription: "Pie in the Sky")
+            image?.isTemplate = true
+            statusItem.button?.image = image
+        default:
+            statusItem.button?.image = Icon.headphones(filled: false)
         }
-        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "Pie in the Sky")
-        image?.isTemplate = true
-        statusItem.button?.image = image
     }
 
     func menuNeedsUpdate(_ menu: NSMenu) {

@@ -68,7 +68,7 @@ would need a paid Developer ID for notarization, so none are provided yet.
 
 ## Use
 
-The app lives in the menu bar (headphones icon; filled while it is active).
+The app lives in the menu bar (headphones with a pretzel-twisted headband; the ear cups fill in while it is active).
 
 | Menu item | What it does |
 |---|---|
