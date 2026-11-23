@@ -17,8 +17,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         DispatchQueue.main.async { [self] in
             switch DriverInstaller.status {
             case .missing:
-                offerInstall("BT Latency Proxy needs its audio driver",
-                             "The driver adds the “BT Latency Proxy” output. Installing it asks for an administrator password and interrupts audio for a second.")
+                offerInstall("Pie in the Sky needs its audio driver",
+                             "The driver adds the “Pie in the Sky” output. Installing it asks for an administrator password and interrupts audio for a second.")
             case .outdated:
                 offerInstall("The audio driver needs an update",
                              "This version of the app comes with a newer driver. Updating asks for an administrator password and interrupts audio for a second.")
@@ -41,7 +41,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         case .noDriver, .failed: symbol = "exclamationmark.triangle"
         default: symbol = "headphones"
         }
-        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "BT Latency Proxy")
+        let image = NSImage(systemSymbolName: symbol, accessibilityDescription: "Pie in the Sky")
         image?.isTemplate = true
         statusItem.button?.image = image
     }
@@ -178,7 +178,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc private func uninstall() {
         let a = NSAlert()
-        a.messageText = "Uninstall BT Latency Proxy?"
+        a.messageText = "Uninstall Pie in the Sky?"
         a.informativeText = "This removes the audio driver (administrator password required) and the login item, then quits. Afterwards move the app to the Trash."
         a.addButton(withTitle: "Uninstall")
         a.addButton(withTitle: "Cancel")

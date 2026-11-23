@@ -22,7 +22,7 @@ final class Controller: @unchecked Sendable {
 
     static let shared = Controller()
 
-    let queue = DispatchQueue(label: "bt-latency-proxy.controller")
+    let queue = DispatchQueue(label: "pie-in-the-sky.controller")
     var onChange: (@Sendable () -> Void)?
 
     private let lock = NSLock()

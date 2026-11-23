@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
-	<string>BTLatencyProxy</string>
+	<string>PieInTheSky</string>
 	<key>CFBundleIdentifier</key>
-	<string>io.github.woolstrand.btlatencyproxy</string>
+	<string>io.github.woolstrand.pieinthesky</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>BT Latency Proxy</string>
+	<string>Pie in the Sky</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

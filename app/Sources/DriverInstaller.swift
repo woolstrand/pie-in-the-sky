@@ -2,7 +2,7 @@ import Foundation
 
 /// Installs the HAL driver bundled inside the app into /Library/Audio/Plug-Ins/HAL.
 enum DriverInstaller {
-    static let bundleName = "BTLatencyProxy.driver"
+    static let bundleName = "PieInTheSky.driver"
     static let installedURL = URL(fileURLWithPath: "/Library/Audio/Plug-Ins/HAL").appendingPathComponent(bundleName)
     static var bundledURL: URL? { Bundle.main.resourceURL?.appendingPathComponent(bundleName) }
 

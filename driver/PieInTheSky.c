@@ -1,8 +1,8 @@
 /*
-     File: BTLatencyProxy.c
+     File: PieInTheSky.c
 
  Derived from BlackHole 0.7.1, Copyright (C) 2019 Existential Audio Inc., GPL-3.0.
- Modified for bt-latency-proxy (2026): the device reports a configurable output latency
+ Modified for pie-in-the-sky (2026): the device reports a configurable output latency
  (custom property 'btlt', milliseconds) and does not apply its volume to the samples.
  The companion app forwards the audio to the real Bluetooth device and mirrors the volume.
 */
@@ -238,13 +238,13 @@ struct ObjectInfo {
 #define                             kLatency_Frame_Size                 0
 #endif
 
-// bt-latency-proxy: custom device property holding the reported output latency in ms (CFNumber).
-#define                             kBTProxy_LatencyProperty            'btlt'
-#ifndef kBTProxy_DefaultLatencyMs
-#define                             kBTProxy_DefaultLatencyMs           250.0
+// pie-in-the-sky: custom device property holding the reported output latency in ms (CFNumber).
+#define                             kPie_LatencyProperty            'btlt'
+#ifndef kPie_DefaultLatencyMs
+#define                             kPie_DefaultLatencyMs           250.0
 #endif
-#define                             kBTProxy_MaxLatencyMs               2000.0
-// bt-latency-proxy: the volume control is kept (so the slider and keys work), but the companion app
+#define                             kPie_MaxLatencyMs               2000.0
+// pie-in-the-sky: the volume control is kept (so the slider and keys work), but the companion app
 // applies it to the Bluetooth device instead of scaling the samples here.
 #ifndef kApplyVolumeToSamples
 #define                             kApplyVolumeToSamples               false
@@ -300,7 +300,7 @@ static const Float32                kVolume_MaxDB                       = 0.0;
 static Float32                      gVolume_Master_Value                = 1.0;
 static Float32                      gPitch_Adjust                       = 0.5;
 static bool                         gMute_Master_Value                  = false;
-static Float64                      gBTProxy_LatencyMs                  = kBTProxy_DefaultLatencyMs;
+static Float64                      gPie_LatencyMs                  = kPie_DefaultLatencyMs;
 static UInt32                       kClockSource_NumberItems            = 2;
 #define                             kClockSource_InternalFixed         "Internal Fixed"
 #define                             kClockSource_InternalAdjustable    "Internal Adjustable"
@@ -467,10 +467,10 @@ static CFStringRef get_device2_uid(void)      { RETURN_FORMATTED_STRING(kDevice2
 static CFStringRef get_device2_name(void)     { RETURN_FORMATTED_STRING(kDevice2_Name) }
 static CFStringRef get_device_model_uid(void) { RETURN_FORMATTED_STRING(kDevice_ModelUID) }
 
-static UInt32 btproxy_latency_frames(void)
+static UInt32 pie_latency_frames(void)
 {
     pthread_mutex_lock(&gPlugIn_StateMutex);
-    Float64 theFrames = gBTProxy_LatencyMs * gDevice_SampleRate / 1000.0;
+    Float64 theFrames = gPie_LatencyMs * gDevice_SampleRate / 1000.0;
     pthread_mutex_unlock(&gPlugIn_StateMutex);
     return (UInt32)(theFrames + 0.5);
 }
@@ -806,15 +806,15 @@ static OSStatus	BlackHole_Initialize(AudioServerPlugInDriverRef inDriver, AudioS
 		gBox_Name = CFSTR("BlackHole Box");
 	}
 	
-	//	bt-latency-proxy: restore the reported latency
-	gPlugIn_Host->CopyFromStorage(gPlugIn_Host, CFSTR("bt latency ms"), &theSettingsData);
+	//	pie-in-the-sky: restore the reported latency
+	gPlugIn_Host->CopyFromStorage(gPlugIn_Host, CFSTR("latency ms"), &theSettingsData);
 	if(theSettingsData != NULL)
 	{
 		if(CFGetTypeID(theSettingsData) == CFNumberGetTypeID())
 		{
-			Float64 theValue = kBTProxy_DefaultLatencyMs;
+			Float64 theValue = kPie_DefaultLatencyMs;
 			CFNumberGetValue((CFNumberRef)theSettingsData, kCFNumberFloat64Type, &theValue);
-			if(theValue >= 0.0 && theValue <= kBTProxy_MaxLatencyMs) gBTProxy_LatencyMs = theValue;
+			if(theValue >= 0.0 && theValue <= kPie_MaxLatencyMs) gPie_LatencyMs = theValue;
 		}
 		CFRelease(theSettingsData);
 	}
@@ -2232,7 +2232,7 @@ static Boolean	BlackHole_HasDeviceProperty(AudioServerPlugInDriverRef inDriver, 
 		case kAudioDevicePropertyZeroTimeStampPeriod:
 		case kAudioDevicePropertyIcon:
 		case kAudioObjectPropertyCustomPropertyInfoList:
-		case kBTProxy_LatencyProperty:
+		case kPie_LatencyProperty:
 		case kAudioDevicePropertyStreams:
 			theAnswer = true;
 			break;
@@ -2301,7 +2301,7 @@ static OSStatus	BlackHole_IsDevicePropertySettable(AudioServerPlugInDriverRef in
 			*outIsSettable = false;
 			break;
 		
-		case kBTProxy_LatencyProperty:
+		case kPie_LatencyProperty:
 		case kAudioDevicePropertyNominalSampleRate:
 			*outIsSettable = true;
 			break;
@@ -2443,7 +2443,7 @@ static OSStatus	BlackHole_GetDevicePropertyDataSize(AudioServerPlugInDriverRef i
 			*outDataSize = sizeof(AudioServerPlugInCustomPropertyInfo);
 			break;
 
-		case kBTProxy_LatencyProperty:
+		case kPie_LatencyProperty:
 			*outDataSize = sizeof(CFPropertyListRef);
 			break;
 
@@ -2706,8 +2706,8 @@ static OSStatus	BlackHole_GetDevicePropertyData(AudioServerPlugInDriverRef inDri
 			//	This property returns the presentation latency of the device. For this,
 			//	device, the value is 0 due to the fact that it always vends silence.
 			FailWithAction(inDataSize < sizeof(UInt32), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for the return value of kAudioDevicePropertyLatency for the device");
-			// bt-latency-proxy: report the configured presentation latency to playback clients (output scope only).
-			*((UInt32*)outData) = (inAddress->mScope == kAudioObjectPropertyScopeOutput) ? btproxy_latency_frames() : 0;
+			// pie-in-the-sky: report the configured presentation latency to playback clients (output scope only).
+			*((UInt32*)outData) = (inAddress->mScope == kAudioObjectPropertyScopeOutput) ? pie_latency_frames() : 0;
 			*outDataSize = sizeof(UInt32);
 			break;
 
@@ -2898,17 +2898,17 @@ static OSStatus	BlackHole_GetDevicePropertyData(AudioServerPlugInDriverRef inDri
 			
 		case kAudioObjectPropertyCustomPropertyInfoList:
 			FailWithAction(inDataSize < sizeof(AudioServerPlugInCustomPropertyInfo), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for kAudioObjectPropertyCustomPropertyInfoList");
-			((AudioServerPlugInCustomPropertyInfo*)outData)->mSelector = kBTProxy_LatencyProperty;
+			((AudioServerPlugInCustomPropertyInfo*)outData)->mSelector = kPie_LatencyProperty;
 			((AudioServerPlugInCustomPropertyInfo*)outData)->mPropertyDataType = kAudioServerPlugInCustomPropertyDataTypeCFPropertyList;
 			((AudioServerPlugInCustomPropertyInfo*)outData)->mQualifierDataType = kAudioServerPlugInCustomPropertyDataTypeNone;
 			*outDataSize = sizeof(AudioServerPlugInCustomPropertyInfo);
 			break;
 
-		case kBTProxy_LatencyProperty:
+		case kPie_LatencyProperty:
 		{
 			FailWithAction(inDataSize < sizeof(CFPropertyListRef), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_GetDevicePropertyData: not enough space for the latency property");
 			pthread_mutex_lock(&gPlugIn_StateMutex);
-			Float64 theLatencyMs = gBTProxy_LatencyMs;
+			Float64 theLatencyMs = gPie_LatencyMs;
 			pthread_mutex_unlock(&gPlugIn_StateMutex);
 			*((CFPropertyListRef*)outData) = CFNumberCreate(NULL, kCFNumberFloat64Type, &theLatencyMs);
 			*outDataSize = sizeof(CFPropertyListRef);
@@ -2967,7 +2967,7 @@ static OSStatus	BlackHole_SetDevicePropertyData(AudioServerPlugInDriverRef inDri
 			}
 			break;
 		
-		case kBTProxy_LatencyProperty:
+		case kPie_LatencyProperty:
 		{
 			FailWithAction(inDataSize != sizeof(CFPropertyListRef), theAnswer = kAudioHardwareBadPropertySizeError, Done, "BlackHole_SetDevicePropertyData: wrong size for the latency property");
 			CFPropertyListRef theValue = *((const CFPropertyListRef*)inData);
@@ -2975,18 +2975,18 @@ static OSStatus	BlackHole_SetDevicePropertyData(AudioServerPlugInDriverRef inDri
 			Float64 theLatencyMs = 0.0;
 			CFNumberGetValue((CFNumberRef)theValue, kCFNumberFloat64Type, &theLatencyMs);
 			if(!(theLatencyMs >= 0.0)) theLatencyMs = 0.0;
-			if(theLatencyMs > kBTProxy_MaxLatencyMs) theLatencyMs = kBTProxy_MaxLatencyMs;
+			if(theLatencyMs > kPie_MaxLatencyMs) theLatencyMs = kPie_MaxLatencyMs;
 			pthread_mutex_lock(&gPlugIn_StateMutex);
-			Boolean theChanged = (theLatencyMs != gBTProxy_LatencyMs);
-			gBTProxy_LatencyMs = theLatencyMs;
+			Boolean theChanged = (theLatencyMs != gPie_LatencyMs);
+			gPie_LatencyMs = theLatencyMs;
 			pthread_mutex_unlock(&gPlugIn_StateMutex);
 			if(theChanged)
 			{
 				CFNumberRef theStored = CFNumberCreate(NULL, kCFNumberFloat64Type, &theLatencyMs);
-				gPlugIn_Host->WriteToStorage(gPlugIn_Host, CFSTR("bt latency ms"), theStored);
+				gPlugIn_Host->WriteToStorage(gPlugIn_Host, CFSTR("latency ms"), theStored);
 				CFRelease(theStored);
 				*outNumberPropertiesChanged = 2;
-				outChangedAddresses[0].mSelector = kBTProxy_LatencyProperty;
+				outChangedAddresses[0].mSelector = kPie_LatencyProperty;
 				outChangedAddresses[0].mScope = kAudioObjectPropertyScopeGlobal;
 				outChangedAddresses[0].mElement = kAudioObjectPropertyElementMain;
 				outChangedAddresses[1].mSelector = kAudioDevicePropertyLatency;

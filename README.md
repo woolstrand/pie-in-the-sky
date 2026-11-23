@@ -1,4 +1,4 @@
-# BT Latency Proxy
+# Pie in the Sky
 
 A macOS menu bar app that fixes video freezing and lagging with Bluetooth headphones whose
 reported latency is wrong.
@@ -33,11 +33,11 @@ help either: they adopt the largest sub-device latency.
 
 ### Fix
 
-The app installs a small virtual output device, **BT Latency Proxy**, which reports a sane,
+The app installs a small virtual output device, **Pie in the Sky**, which reports a sane,
 adjustable latency (250 ms by default). When your Bluetooth output reports an absurd value, the
 app does three things:
 
-1. Makes BT Latency Proxy the default output.
+1. Makes Pie in the Sky the default output.
 2. Forwards its audio straight to the headphones through its own IO, so the real audio path
    stays as short as the headphones allow.
 3. Mirrors the volume both ways. The volume keys, the menu bar slider and the headphone buttons
@@ -54,8 +54,8 @@ disconnect, or you pick another output, the app steps aside.
 ## Install
 
 ```bash
-git clone https://github.com/woolstrand/bt-latency-proxy.git
-cd bt-latency-proxy
+git clone https://github.com/woolstrand/pie-in-the-sky.git
+cd pie-in-the-sky
 make install
 ```
 

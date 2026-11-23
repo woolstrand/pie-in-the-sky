@@ -5,13 +5,13 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
-	<string>BTLatencyProxy</string>
+	<string>PieInTheSky</string>
 	<key>CFBundleIdentifier</key>
-	<string>io.github.woolstrand.btlatencyproxy.driver</string>
+	<string>io.github.woolstrand.pieinthesky.driver</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>BTLatencyProxy</string>
+	<string>PieInTheSky</string>
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
@@ -22,14 +22,14 @@
 	<string>@VERSION@</string>
 	<key>CFPlugInFactories</key>
 	<dict>
-		<key>F400A20C-00B1-452E-85EF-37F8870D410A</key>
+		<key>24DB176D-F916-4692-B538-962D9645E7A8</key>
 		<string>BlackHole_Create</string>
 	</dict>
 	<key>CFPlugInTypes</key>
 	<dict>
 		<key>443ABAB8-E7B3-491A-B985-BEB9187030DB</key>
 		<array>
-			<string>F400A20C-00B1-452E-85EF-37F8870D410A</string>
+			<string>24DB176D-F916-4692-B538-962D9645E7A8</string>
 		</array>
 	</dict>
 </dict>

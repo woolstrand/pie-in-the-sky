@@ -1,6 +1,6 @@
-bt-latency-proxy is licensed under the GNU General Public License v3.0 (text below).
+pie-in-the-sky is licensed under the GNU General Public License v3.0 (text below).
 
-driver/BTLatencyProxy.c is derived from BlackHole, © 2019–2026 Existential Audio Inc.,
+driver/PieInTheSky.c is derived from BlackHole, © 2019–2026 Existential Audio Inc.,
 licensed under the GNU General Public License v3.0. This project is not affiliated with or
 endorsed by Existential Audio Inc.; the BlackHole name and branding are their trademarks
 and are not used for this product.

@@ -2,12 +2,12 @@ import CoreAudio
 import Foundation
 import os
 
-let log = Logger(subsystem: "io.github.woolstrand.btlatencyproxy", category: "app")
+let log = Logger(subsystem: "io.github.woolstrand.pieinthesky", category: "app")
 
 /// Thin helpers over the CoreAudio HAL C API.
 enum CA {
     static let system = AudioObjectID(kAudioObjectSystemObject)
-    static let proxyUID = "BT Latency Proxy_UID"
+    static let proxyUID = "PieInTheSky_UID"
     /// Custom property of the proxy driver: reported output latency in ms (CFNumber).
     static let latencySelector: AudioObjectPropertySelector = 0x62746C74 // 'btlt'
 
